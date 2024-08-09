@@ -1,3 +1,5 @@
+import fs from 'fs/promises';
+
 // TODO: Define a City class with name and id properties
 class City {
 name: string;
