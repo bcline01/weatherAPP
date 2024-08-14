@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
 
-// import HistoryService from '../../service/historyService.js';
+import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
 
 
@@ -10,8 +10,9 @@ router.post('/', async(req, res) => {
 try {
   console.log(req.body);
   const cityName = req.body.cityName;
-  const weatherService = new WeatherService();
-  const weatherData = await weatherService.getWeatherForCity(cityName);
+  console.log(cityName);
+  await HistoryService.addCity(cityName, '');
+  const weatherData = await WeatherService.getWeatherForCity(cityName);
   res.json(weatherData);
 } catch (error) {
   res.status(400).json({error: 'Failed to retrieve weather data'});
@@ -23,18 +24,17 @@ try {
 // });
 
   // TODO: save city to search history
-// HistoryService.addCity(req.body.city, req.body.id).then((data) => { res.json(data);
+HistoryService.addCity(req.body.city, req.body.id).then((data) => { res.json(data);
 
-// });
+});
 
 });
 
 // TODO: GET search history
-router.get('/history', async (_req, _res) => {
-  // WeatherService.getWeatherForCity(req.body.city).then((data) => {
-  //   res.json(data);
-  // })
-});
+router.get('/history', async (_req, res) => {   
+  const cities = await HistoryService.getCities();
+  res.json(cities);
+}); 
 
 // * BONUS TODO: DELETE city from search history
 // router.delete('/history/:id', async (req, res) => {});
