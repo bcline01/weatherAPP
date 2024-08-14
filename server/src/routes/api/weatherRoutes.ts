@@ -24,9 +24,9 @@ try {
 // });
 
   // TODO: save city to search history
-HistoryService.addCity(req.body.city, req.body.id).then((data) => { res.json(data);
+// HistoryService.addCity(req.body.city, req.body.id).then((data) => { res.json(data);
 
-});
+// });
 
 });
 

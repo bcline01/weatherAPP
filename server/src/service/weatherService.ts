@@ -28,6 +28,7 @@ class Weather {
 // TODO: Complete the WeatherService class
 class WeatherService {
   static getWeatherForCity(cityName: any) {
+    console.log('cityName: ' + cityName);
     throw new Error('Method not implemented.');
   }
   // TODO: Define the baseURL, API key, and city name properties
