@@ -27,10 +27,10 @@ class Weather {
 }
 // TODO: Complete the WeatherService class
 class WeatherService {
-  static getWeatherForCity(cityName: any) {
-    console.log('cityName: ' + cityName);
-    throw new Error('Method not implemented.');
-  }
+//   static getWeatherForCity(cityName: any) {
+//     console.log('cityName: ' + cityName);
+//     throw new Error('Method not implemented.');
+//   }
   // TODO: Define the baseURL, API key, and city name properties
   private baseURL = process.env.API_BASE_URL || '';
   private apiKey = process.env.API_KEY || '';  
@@ -38,8 +38,8 @@ class WeatherService {
 
   constructor(cityName: string) {
     this.cityName = cityName || '';
-    console.log('API Base URL:', this.baseURL);
-    console.log('API Key:', this.apiKey);
+    // console.log('API Base URL:', this.baseURL);
+    // console.log('API Key:', this.apiKey);
   }
 
   public setCityName(cityName: string): void {
@@ -53,7 +53,7 @@ class WeatherService {
   // TODO: Create fetchLocationData method
   async fetchLocationData(cityName: string): Promise<any> {
     const url = `${this.baseURL}/data/2.5/weather?q=${cityName}&units=imperial&appid=${this.apiKey}`;
-    console.log('URL:', url);
+    // console.log('URL:', url);
     try {
       const response = await fetch(url);
 
@@ -62,7 +62,7 @@ class WeatherService {
       }
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       return data;
       
@@ -74,14 +74,14 @@ class WeatherService {
 
   private destructureLocationData(response: any): Coordinates {
     const { coord: { lat, lon } } = response;
-    console.log(`Latitude: ${lat}, Longitude: ${lon}`);
+    // console.log(`Latitude: ${lat}, Longitude: ${lon}`);
     return { lat, lon };
   } 
 
   private buildWeatherQuery(lat: number, lon: number): string {
     const baseURL = process.env.API_BASE_URL || '';
     const apiKey = process.env.API_KEY || '';
-    return `${baseURL}/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    return `${baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
   }
 
   // TODO: Create fetchWeatherData method
@@ -89,6 +89,7 @@ class WeatherService {
     const { lat, lon } = coordinates;
     const url = this.buildWeatherQuery(lat, lon);
     const response = await fetch(url);
+    console.log(response);
     if (!response.ok) {
       throw new Error(`Error fetching weather data`);
     }
@@ -106,21 +107,22 @@ class WeatherService {
   }
 
   // TODO: Complete buildForecastArray method
-  private buildForecastArray(currentWeather: Weather, weatherData: any[]): Weather[] {
-    console.log(currentWeather);
+  private buildForecastArray(_currentWeather: Weather, weatherData: any[]): Weather[] {
+    // console.log(currentWeather);
+    console.log(weatherData);
     
     const forecastArray: Weather[] = [];
     weatherData.forEach((weather: any) => {
-      const { temp, wind, humidity, description, icon } = weather;
+      // const { temp, wind, humidity, description, icon } = weather;
       const date = new Date(weather.dt * 1000).toISOString();
-      forecastArray.push(new Weather(temp, wind, humidity, description, icon, date));
+      forecastArray.push(new Weather(weather.main.temp, weather.wind.speed, weather.main.humidity, weather.weather[0].description, weather.weather[0].icon, date));
     });
     return forecastArray;
   }
 
   // TODO: Complete getWeatherForCity method
-  async getWeatherForCity(city: string): Promise<Weather[]> {
-    console.log(city);
+  static async getWeatherForCity(city: string): Promise<Weather[]> {
+    // console.log(city);
     const weatherService = new WeatherService(city);
     const locationData = await weatherService.fetchLocationData(city);
     const coordinates = weatherService.destructureLocationData(locationData);
