@@ -13,7 +13,7 @@ try {
   console.log(cityName);
   await HistoryService.addCity(cityName, '');
   const weatherData = await WeatherService.getWeatherForCity(cityName);
-  // console.log(weatherData);
+  console.log(weatherData);
   res.json(weatherData);
 } catch (error) {
   res.status(400).json({error: 'Failed to retrieve weather data'});

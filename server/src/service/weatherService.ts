@@ -9,19 +9,21 @@ interface Coordinates {
 }
 // TODO: Define a class for the Weather object
 class Weather {
-  temperature: number;
-  wind: string;
+  city: string;
+  tempF: number;
+  windSpeed: string;
   humidity: number;
-  description: string;
   icon: string;
+  iconDescription: string;
   date: string;
 
-  constructor(temperature: number, wind: string, humidity: number, description: string, icon: string, date: string) {
-    this.temperature = temperature;
-    this.wind = wind;
+  constructor(city: string, tempF: number, windSpeed: string, humidity: number, icon: string, iconDescription: string, date: string) {
+    this.city = city;
+    this.tempF = tempF;
+    this.windSpeed = windSpeed;
     this.humidity = humidity;
-    this.description = description;
     this.icon = icon;
+    this.iconDescription = iconDescription;
     this.date = date;
   }
 }
@@ -81,7 +83,7 @@ class WeatherService {
   private buildWeatherQuery(lat: number, lon: number): string {
     const baseURL = process.env.API_BASE_URL || '';
     const apiKey = process.env.API_KEY || '';
-    return `${baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    return `${baseURL}/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
   }
 
   // TODO: Create fetchWeatherData method
@@ -89,7 +91,7 @@ class WeatherService {
     const { lat, lon } = coordinates;
     const url = this.buildWeatherQuery(lat, lon);
     const response = await fetch(url);
-    console.log(response);
+    // console.log(response);
     if (!response.ok) {
       throw new Error(`Error fetching weather data`);
     }
@@ -101,21 +103,23 @@ class WeatherService {
 
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any): Weather {
-    const { temp, wind, humidity, description, icon } = response;
+    // const weather = response;
+    console.log(response);
     const date = dayjs.unix(response.dt).format('MM/DD/YYYY');
-    return new Weather(temp, wind, humidity, description, icon, date);
+    return new Weather(response.main.city, response.main.temp, response.wind.speed, response.main.humidity, response.weather[0].icon,response.weather[0].description, date);
   }
 
   // TODO: Complete buildForecastArray method
   private buildForecastArray(_currentWeather: Weather, weatherData: any[]): Weather[] {
     // console.log(currentWeather);
-    console.log(weatherData);
+    // console.log(weatherData);
     
     const forecastArray: Weather[] = [];
     weatherData.forEach((weather: any) => {
       // const { temp, wind, humidity, description, icon } = weather;
       const date = new Date(weather.dt * 1000).toISOString();
-      forecastArray.push(new Weather(weather.main.temp, weather.wind.speed, weather.main.humidity, weather.weather[0].description, weather.weather[0].icon, date));
+      if(weather.dt_txt.includes('12:00:00')) {
+      forecastArray.push(new Weather(weather.main.city, weather.main.temp, weather.wind.speed, weather.main.humidity, weather.weather[0].icon, weather.weather[0].description, date))};
     });
     return forecastArray;
   }
@@ -127,7 +131,7 @@ class WeatherService {
     const locationData = await weatherService.fetchLocationData(city);
     const coordinates = weatherService.destructureLocationData(locationData);
     const weatherData = await weatherService.fetchWeatherData(coordinates);
-    const currentWeather = weatherService.parseCurrentWeather(weatherData);
+    const currentWeather = weatherService.parseCurrentWeather(weatherData.list[0]);
     const forecast = weatherService.buildForecastArray(currentWeather, weatherData.list);
     return [currentWeather, ...forecast];
   }
