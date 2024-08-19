@@ -106,7 +106,7 @@ class WeatherService {
     // const weather = response;
     console.log(response);
     const date = dayjs.unix(response.dt).format('MM/DD/YYYY');
-    return new Weather(response.main.city, response.main.temp, response.wind.speed, response.main.humidity, response.weather[0].icon,response.weather[0].description, date);
+    return new Weather(response.city.name, response.main.temp, response.wind.speed, response.main.humidity, response.weather[0].icon,response.weather[0].description, date);
   }
 
   // TODO: Complete buildForecastArray method
@@ -119,7 +119,7 @@ class WeatherService {
       // const { temp, wind, humidity, description, icon } = weather;
       const date = new Date(weather.dt * 1000).toISOString();
       if(weather.dt_txt.includes('12:00:00')) {
-      forecastArray.push(new Weather(weather.main.city, weather.main.temp, weather.wind.speed, weather.main.humidity, weather.weather[0].icon, weather.weather[0].description, date))};
+      forecastArray.push(new Weather(weather.city.name, weather.main.temp, weather.wind.speed, weather.main.humidity, weather.weather[0].icon, weather.weather[0].description, date))};
     });
     return forecastArray;
   }
@@ -138,10 +138,3 @@ class WeatherService {
 }
 
 export default WeatherService;
-
-
-
-
-
-
-
