@@ -8,12 +8,11 @@ This Weather Application allows users to view a 5 day forecast for the city of t
   1. [Description](#description)
   2. [Installation](#installation)
   3. [Usage](#usage)
-  4. [DemoVideo](#demovideo)
-  5. [Credits](#credits)
-  6. [License](#license)
-  7. [features](#features)
-  8. [Contributors](#contribute)
-  9. [Test](#test)
+  4. [Credits](#credits)
+  5. [License](#license)
+  6. [features](#features)
+  7. [Contributors](#contribute)
+  8. [Test](#test)
 
   ## Installation
   Clone the respository from my **[GitHub](https://github.com/bcline01/vehicle-builder)**
